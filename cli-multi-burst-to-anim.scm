@@ -14,18 +14,18 @@
                               )
   (let* ((filelist (cadr (file-glob pattern 1))))
     (while (not (null? filelist))
-        (let* ( 
-            (cic-col 0)
-            (cic-row 0)
-            (filename (car filelist))
-            (img (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
-            (drawable (car (gimp-image-get-active-layer img)))
-            (width   (/ (car (gimp-image-width  img)) cols)) 
-            (height  (/ (car (gimp-image-height img)) rows))
-            (image (car (gimp-image-new width height RGB))) 
-            (newlayer (car (gimp-layer-new image width height 0 "Layer 1" 100 NORMAL-MODE))))
+      (let* ( 
+          (cic-col 0)
+          (cic-row 0)
+          (filename (car filelist))
+          (img (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+          (drawable (car (gimp-image-get-active-layer img)))
+          (width   (/ (car (gimp-image-width  img)) cols)) 
+          (height  (/ (car (gimp-image-height img)) rows))
+          (image (car (gimp-image-new width height RGB))) 
+          (newlayer (car (gimp-layer-new image width height 0 "Layer 1" 100 NORMAL-MODE))))
   
-      (gimp-image-undo-disable image)
+      ; (gimp-image-undo-disable image)
       (while(< cic-row rows)
         
         (set! cic-col 0)
@@ -51,10 +51,9 @@
       (if (= rotate 2) (gimp-image-rotate image 2))
 
       (gimp-image-convert-indexed image 3 0 255 FALSE FALSE "0")
-      (file-gif-save RUN-NONINTERACTIVE image (car (gimp-image-active-drawable image)) (string-append (car (gimp-image-get-filename img)) "-anim.gif")   (string-append (car (gimp-image-get-filename img)) "-anim.gif")   0 loop4ever delayMsec 0)
+      (file-gif-save RUN-NONINTERACTIVE image (car (gimp-image-get-active-drawable image)) (string-append (car (gimp-image-get-filename img)) "-anim.gif")   (string-append (car (gimp-image-get-filename img)) "-anim.gif")   0 loop4ever delayMsec 0)
 
-      (gimp-image-undo-enable image)
-      (gimp-displays-flush)
+      ; (gimp-image-undo-enable image)
       )
     )
   )
